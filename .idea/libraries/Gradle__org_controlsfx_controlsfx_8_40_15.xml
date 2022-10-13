@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.controlsfx:controlsfx:8.40.15">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.controlsfx/controlsfx/8.40.15/e4d5aaf07a6637f90ec8c3ccb4838682545391bd/controlsfx-8.40.15.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.controlsfx/controlsfx/8.40.15/95d3e41684b553273958f57786289a3277b88bc1/controlsfx-8.40.15-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,65 @@
+.root {
+    -fx-font-family: "Tahoma";
+    -fx-font-size: 12.5px;
+    -fx-base: #FFFFFF;
+    -fx-background: #FFFFFF;
+    -fx-focus-color: #D2B32D;
+    -fx-control-inner-background: #FFFFFF;
+    /*-fx-inner-border: linear-gradient(to bottom, derive(-fx-color,100.0%) 0%, derive(-fx-color,100.0%) 100%);*/
+    /*-fx-body-color: linear-gradient( to bottom, derive(-fx-color, 100.0%) 0%, derive(-fx-color, 100.0%) 100%);*/
+}
+.button {
+        -fx-background-color:
+        #ffffdf
+
+
+}
+
+.button:pressed {
+                -fx-background-color:
+                        #ffffdf,
+                        rgba(0,0,0,0.05),
+                        linear-gradient(#ecebe9, #ecebe9),
+                        linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),
+                        linear-gradient(#f6ebbe, #e6c34d);
+            }
+
+.combo-box-base:editable .text-field, .combo-box-base .arrow-button, .combo-box .list-cell {
+    -fx-padding: 2px 5px 2px 5px;
+}
+ .combo-box-base {
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+}
+.combo-box-base:focused {
+    -fx-background-insets: -1.4, 0, 1, 2;
+}
+.combo-box-base .arrow-button {
+    -fx-background-insets: 0, 1, 2;
+}
+
+#error .text{
+    -fx-fill : red;
+    /*-fx-background-color: palegreen;*/
+    /*-fx-background: palegreen;*/
+}
+
+/*.rowcolor {*/
+/*    -fx-background-color: palegreen;*/
+/*}*/
+
+#not-error .text{
+    -fx-fill : green;
+    /*-fx-background-color: yellow;*/
+}
+
+/*#rowc .text{*/
+/*  -fx-background-color: yellow ;*/
+/*}*/
+
+
+.statusTask{
+    -fx-padding: 0.5em;
+    -fx-border-color: transparent -fx-box-border transparent transparent;
+    -fx-font: 13px "Arial";
+    -fx-text-fill: red;
+}
