@@ -15,6 +15,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     List<Task> findByTaskContainingIgnoreCase(String task);
 
-    Page<Task> findByTaskContainingIgnoreCase(String fio, Pageable pageable);
+    Page<Task> findByTaskContainingIgnoreCase(String task, Pageable pageable);
 
 }

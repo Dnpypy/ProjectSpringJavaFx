@@ -69,13 +69,28 @@ public class ServiceTaskDaoImpl implements ServiceTaskDao {
         return FXCollections.observableArrayList(Lists.newArrayList(taskRepository.findByTaskContainingIgnoreCase(text)));
     }
 
+    /**
+     *
+     * @param from с какой страницы начинать
+     * @param count какое количество брать
+     * @return возвращает все записи с возможностью постраничности
+     * Sort.Direction.ASC возможность сортировки
+     * "task" по какому полю
+     */
     @Override
     public Page findAll(int from, int count) {
         return taskRepository.findAll(new PageRequest(from, count, Sort.Direction.ASC, "task"));
     }
 
+    /**
+     *
+     * @param from с какой страницы начинать
+     * @param count какое количество брать
+     * @param text текст который ищем по колонке task
+     * @return возвращает все записи с возможностью постраничности
+     */
     @Override
     public Page findAll(int from, int count, String... text) {
-        return taskRepository.findByTaskContainingIgnoreCase(text[0], new PageRequest(from, count, Sort.Direction.ASC, "fio"));
+        return taskRepository.findByTaskContainingIgnoreCase(text[0], new PageRequest(from, count, Sort.Direction.ASC, "task"));
     }
 }

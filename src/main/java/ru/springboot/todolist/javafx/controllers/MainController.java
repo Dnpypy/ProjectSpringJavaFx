@@ -43,7 +43,7 @@ public class MainController extends Observable {
 
     /**
      * @param PAGE_SIZE количество задач на странице
-     * @param MAX_PAGE_SHOW количество страниц
+     * @param MAX_PAGE_SHOW количество страниц, которые видны сразу
      * @param page текущие постраничные данные
      */
     private static final int PAGE_SIZE = 12;
@@ -183,12 +183,6 @@ public class MainController extends Observable {
      * taskTableViewList.refresh(); -> обновление tableView
      */
     private void fillTable() {
-        //System.out.println("=========================");
-//        taskObservableList = serviceTaskDao.findAll();
-//        System.out.println("taskObservableList.isEm   pty = " + taskObservableList.isEmpty());
-//        taskTableViewList.setItems(taskObservableList);
-       // taskTableViewList.refresh(); урал пока
-
         if (txtSearch.getText().trim().length() == 0) {
             page = serviceTaskDao.findAll(0, PAGE_SIZE);
         }else {
