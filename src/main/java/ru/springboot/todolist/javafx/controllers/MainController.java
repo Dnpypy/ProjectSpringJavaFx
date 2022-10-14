@@ -42,15 +42,18 @@ import java.util.ResourceBundle;
 public class MainController extends Observable {
 
     /**
-     * TaskDbDaoImpl todoListImpl = new TaskDbDaoImpl(); -> реализация БД отключена
-     * Hibernate реализация, название переменной такое же, как у реализации базы данных
+     * @param PAGE_SIZE количество задач на странице
+     * @param MAX_PAGE_SHOW количество страниц
+     * @param page текущие постраничные данные
      */
-    //private static TaskHibernateImpl todoListImpl = new TaskHibernateImpl();
-
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 12;
     public static final int MAX_PAGE_SHOW = 10;
+    private Page page;
 
-    private Page page;// текущие постраничные данные
+
+    /**
+     * Spring JPA реализация
+     */
     @Autowired
     private ServiceTaskDao todoListImpl;
 
@@ -372,7 +375,7 @@ public class MainController extends Observable {
                     txtTodoList.getSelectionModel().getSelectedItem().setStatus(complete);
                     todoListImpl.completeTask(selectedTask, complete);
                 }
-                txtTodoList.refresh();
+                //txtTodoList.refresh();
                 research = true;
                 break;
 
