@@ -65,7 +65,7 @@
         </AnchorPane>
         <AnchorPane prefHeight="100.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
             <children>
-                <TableView fx:id="txtTodoList" prefHeight="236.0" prefWidth="490.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <TableView fx:id="taskTableViewList" prefHeight="236.0" prefWidth="490.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
                         <TableColumn fx:id="mainTask" minWidth="150.0" prefWidth="237.0" text="%Task_name" />
                         <TableColumn fx:id="timeTask" prefWidth="148.0" text="%Task_create_time" />

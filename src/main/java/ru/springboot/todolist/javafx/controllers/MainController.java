@@ -55,7 +55,7 @@ public class MainController extends Observable {
      * Spring JPA реализация
      */
     @Autowired
-    private ServiceTaskDao todoListImpl;
+    private ServiceTaskDao serviceTaskDao;
 
     ObservableList<Task> taskObservableList;
     @Autowired
@@ -90,7 +90,7 @@ public class MainController extends Observable {
     @FXML
     public Button btnSearch;
     @FXML
-    public TableView<Task> txtTodoList;
+    public TableView<Task>  taskTableViewList;
 
     @FXML
     public TableColumn<Task, String> mainTask;
@@ -174,25 +174,25 @@ public class MainController extends Observable {
         pagination.setPageCount(page.getTotalPages());
 
         taskObservableList = FXCollections.observableArrayList(page.getContent());
-        txtTodoList.setItems(taskObservableList);
+        taskTableViewList.setItems(taskObservableList);
     }
 
     /**
-     * todoListImpl.findAll(); заполнение листа из таблицы
+     * serviceTaskDao.findAll(); заполнение листа из таблицы
      * setItems(list); -> заполнение tableview
-     * txtTodoList.refresh(); -> обновление tableView
+     * taskTableViewList.refresh(); -> обновление tableView
      */
     private void fillTable() {
         //System.out.println("=========================");
-//        taskObservableList = todoListImpl.findAll();
+//        taskObservableList = serviceTaskDao.findAll();
 //        System.out.println("taskObservableList.isEm   pty = " + taskObservableList.isEmpty());
-//        txtTodoList.setItems(taskObservableList);
-       // txtTodoList.refresh(); урал пока
+//        taskTableViewList.setItems(taskObservableList);
+       // taskTableViewList.refresh(); урал пока
 
         if (txtSearch.getText().trim().length() == 0) {
-            page = todoListImpl.findAll(0, PAGE_SIZE);
+            page = serviceTaskDao.findAll(0, PAGE_SIZE);
         }else {
-            page = todoListImpl.findAll(0, PAGE_SIZE, txtSearch.getText());
+            page = serviceTaskDao.findAll(0, PAGE_SIZE, txtSearch.getText());
         }
         fillPagination(page);
         pagination.setCurrentPageIndex(0);
@@ -202,9 +202,9 @@ public class MainController extends Observable {
     // для показа данных с любой страницы
     private void fillTable(int pageNumber) {
         if (txtSearch.getText().trim().length() == 0) {
-            page = todoListImpl.findAll(pageNumber, PAGE_SIZE);
+            page = serviceTaskDao.findAll(pageNumber, PAGE_SIZE);
         }else {
-            page = todoListImpl.findAll(pageNumber, PAGE_SIZE, txtSearch.getText());
+            page = serviceTaskDao.findAll(pageNumber, PAGE_SIZE, txtSearch.getText());
         }
         fillPagination(page);
         updateCountLabel(page.getTotalElements());
@@ -220,34 +220,34 @@ public class MainController extends Observable {
      * taskObservableList.addListener(new ListChangeListener<Task>() { -> слушатель изменений в таблице
      * updateCountLabel(); -> выводит количество задач
      * timeCurrent(); -> отображения времени
-     * txtTodoList.setOnMouseClicked -> двойное нажатие мыши на строку
+     * taskTableViewList.setOnMouseClicked -> двойное нажатие мыши на строку
      * changeLocaleBox -> слушает изменение языка
-     * txtTodoList.setRowFactory -> Слушатель изменяет цвета статуса состояния задачи
+     * taskTableViewList.setRowFactory -> Слушатель изменяет цвета статуса состояния задачи
      * setChanged(); notifyObservers(selectedLang); -> уведомить всех слушателей, что произошла смена языка
      */
     private void initListeners() {
 
 
         taskObservableList.addListener(new ListChangeListener<Task>() {
-//        todoListImpl.getTasksList().addListener(new ListChangeListener<Task>() {
+//        serviceTaskDao.getTasksList().addListener(new ListChangeListener<Task>() {
             @Override
             public void onChanged(Change<? extends Task> change) {
                // System.out.println("taskObservableList.size()" + taskObservableList.size());
                 updateCountLabel(page.getTotalElements());
                 timeCurrent();
                 //fillTable(); // пробую <---- не работает
-               // txtTodoList.refresh(); //пробую
+               // taskTableViewList.refresh(); //пробую
             }
         });
 
 
-        txtTodoList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        taskTableViewList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.getClickCount() == 2) {
-                    editDialogController.setTaskManagement((Task) txtTodoList.getSelectionModel().getSelectedItem());
+                    editDialogController.setTaskManagement((Task) taskTableViewList.getSelectionModel().getSelectedItem());
                     showDialog();
-                    todoListImpl.update((Task) txtTodoList.getSelectionModel().getSelectedItem());
+                    serviceTaskDao.update((Task) taskTableViewList.getSelectionModel().getSelectedItem());
                 }
             }
         });
@@ -265,7 +265,7 @@ public class MainController extends Observable {
         });
 
 
-        txtTodoList.setRowFactory(row -> new TableRow<Task>() {
+        taskTableViewList.setRowFactory(row -> new TableRow<Task>() {
             public void updateItem(Task item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item == null || empty) {
@@ -290,7 +290,7 @@ public class MainController extends Observable {
      * отображение текущего количество задач
      */
     private void updateCountLabel(long count) {
-       // labelCount.setText(resourceBundle.getString("Number_tasks") + ": " + todoListImpl.getTasksList().size());
+       // labelCount.setText(resourceBundle.getString("Number_tasks") + ": " + serviceTaskDao.getTasksList().size());
 
 //        labelCount.setText(resourceBundle.getString("Number_tasks") + ": " + taskObservableList.size());
         labelCount.setText(resourceBundle.getString("Number_tasks") + ": " + count);
@@ -313,7 +313,7 @@ public class MainController extends Observable {
         if (!(source instanceof Button)) {
             return;
         }
-        Task selectedTask = (Task) txtTodoList.getSelectionModel().getSelectedItem();
+        Task selectedTask = (Task) taskTableViewList.getSelectionModel().getSelectedItem();
         Button clickedButton = (Button) source;
 
         boolean research = false;
@@ -329,7 +329,7 @@ public class MainController extends Observable {
 
                 if (editDialogController.isSaveClicked()) {
                     System.out.println("inner");
-                    todoListImpl.add(editDialogController.getTask());
+                    serviceTaskDao.add(editDialogController.getTask());
                     research = true;
                 }
                 // fillTable();
@@ -339,7 +339,7 @@ public class MainController extends Observable {
                 if (!taskIsSelected(selectedTask) || !(confirmDelete())) {
                     return;
                 }
-                todoListImpl.delete(txtTodoList.getSelectionModel().getSelectedItem());
+                serviceTaskDao.delete(taskTableViewList.getSelectionModel().getSelectedItem());
                 research = true;
                 break;
 
@@ -347,10 +347,10 @@ public class MainController extends Observable {
                 if (!taskIsSelected(selectedTask)) {
                     return;
                 }
-                editDialogController.setTaskManagement((Task) txtTodoList.getSelectionModel().getSelectedItem());
+                editDialogController.setTaskManagement((Task) taskTableViewList.getSelectionModel().getSelectedItem());
                 showDialog();
                 if (editDialogController.isSaveClicked()) {
-                    todoListImpl.update(selectedTask);
+                    serviceTaskDao.update(selectedTask);
                     research = true;
                 }
                 break;
@@ -358,7 +358,7 @@ public class MainController extends Observable {
 
             /**
              * меняется статус задачи выполнена или не выполнена
-             * txtTodoList.refresh(); -> обновляет состояние таблицы tableview при выборе статуса
+             * taskTableViewList.refresh(); -> обновляет состояние таблицы tableview при выборе статуса
              * btn.exit -> выход из программы
              * btn.clear -> очищает поисковое окно
              */
@@ -368,30 +368,22 @@ public class MainController extends Observable {
                 }
                 String unComplete = "не выполнена";
                 String complete = "выполнена";
-                if (!(txtTodoList.getSelectionModel().getSelectedItem().getStatus().equals("не выполнена"))) {
-                    txtTodoList.getSelectionModel().getSelectedItem().setStatus(unComplete);
-                    todoListImpl.completeTask(selectedTask, unComplete);
+                if (!(taskTableViewList.getSelectionModel().getSelectedItem().getStatus().equals("не выполнена"))) {
+                    taskTableViewList.getSelectionModel().getSelectedItem().setStatus(unComplete);
+                    serviceTaskDao.completeTask(selectedTask, unComplete);
                 } else {
-                    txtTodoList.getSelectionModel().getSelectedItem().setStatus(complete);
-                    todoListImpl.completeTask(selectedTask, complete);
+                    taskTableViewList.getSelectionModel().getSelectedItem().setStatus(complete);
+                    serviceTaskDao.completeTask(selectedTask, complete);
                 }
-                //txtTodoList.refresh();
-                research = true;
+                taskTableViewList.refresh();
+               // research = true;
                 break;
 
             case "btnExit":
-                System.exit(1); //выход из программы
+                System.exit(1);
                 break;
 
             case "btnClear":
-                //txtSearch.clear();
-                //txtSearch.getText(txtSearch.clear());
-//                setupClearButtonField(txtSearch);
-//                for (String line : txtSearch.getText().split("\n")) {
-//                    if (line.contains(txtSearch.getText())) {
-//                        txtSearch.setText(txtSearch.getText().replace(line, ""));
-//                    }
-//                }
                 ClearTextSearch.clearText(txtSearch);
                 research = true;
                 break;
@@ -452,13 +444,13 @@ public class MainController extends Observable {
     public void actionSearch(ActionEvent actionEvent) {
 
         if (txtSearch.getText().trim().length() == 0) {
-           // todoListImpl.findAll();
+           // serviceTaskDao.findAll();
             taskObservableList.clear();
-            taskObservableList.addAll(todoListImpl.findAll());
+            taskObservableList.addAll(serviceTaskDao.findAll());
         } else {
-           // todoListImpl.find(txtSearch.getText());
+           // serviceTaskDao.find(txtSearch.getText());
             taskObservableList.clear();
-            taskObservableList.addAll(todoListImpl.find(txtSearch.getText()));
+            taskObservableList.addAll(serviceTaskDao.find(txtSearch.getText()));
         }
     }
 
