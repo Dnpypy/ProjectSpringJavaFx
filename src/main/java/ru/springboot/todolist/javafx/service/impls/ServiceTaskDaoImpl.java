@@ -5,11 +5,15 @@ import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.springboot.todolist.javafx.entity.Task;
 import ru.springboot.todolist.javafx.repository.TaskRepository;
 import ru.springboot.todolist.javafx.service.ServiceTaskDao;
 
+@SuppressWarnings("deprecation")
 @Service
 public class ServiceTaskDaoImpl implements ServiceTaskDao {
 
@@ -65,7 +69,13 @@ public class ServiceTaskDaoImpl implements ServiceTaskDao {
         return FXCollections.observableArrayList(Lists.newArrayList(taskRepository.findByTaskContainingIgnoreCase(text)));
     }
 
-//    public ObservableList<Task> getTasksList() {
-//        return serviceTaskDao;
-//    }
+    @Override
+    public Page findAll(int from, int count) {
+        return taskRepository.findAll(new PageRequest(from, count, Sort.Direction.ASC, "task"));
+    }
+
+    @Override
+    public Page findAll(int from, int count, String... text) {
+        return taskRepository.findByTaskContainingIgnoreCase(text[0], new PageRequest(from, count, Sort.Direction.ASC, "fio"));
+    }
 }

@@ -1,5 +1,8 @@
 package ru.springboot.todolist.javafx.controllers;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import ru.springboot.todolist.javafx.entity.Task;
 import ru.springboot.todolist.javafx.fxml.EditView;
@@ -42,6 +46,11 @@ public class MainController extends Observable {
      * Hibernate реализация, название переменной такое же, как у реализации базы данных
      */
     //private static TaskHibernateImpl todoListImpl = new TaskHibernateImpl();
+
+    private static final int PAGE_SIZE = 10;
+    public static final int MAX_PAGE_SHOW = 10;
+
+    private Page page;// текущие постраничные данные
     @Autowired
     private ServiceTaskDao todoListImpl;
 
@@ -54,6 +63,9 @@ public class MainController extends Observable {
 
     @Autowired
     private EditDialogController editDialogController;
+
+    @FXML
+    private Pagination pagination;
 
     @FXML
     public Button btnNew;
@@ -113,7 +125,7 @@ public class MainController extends Observable {
 
     @FXML
     public void initialize() throws IOException, ClassNotFoundException {
-        //this.resourceBundle = resources;
+        pagination.setMaxPageIndicatorCount(MAX_PAGE_SHOW);
         this.resourceBundle = mainView.getResourceBundle();
         mainTask.setCellValueFactory(new PropertyValueFactory<Task, String>("task"));
         timeTask.setCellValueFactory(new PropertyValueFactory<Task, String>("time"));
@@ -145,8 +157,21 @@ public class MainController extends Observable {
     private void filldata() throws IOException, ClassNotFoundException {
         fillTable();
         fillLangComboBox();
-        updateCountLabel(); // вначале заполняется
+        updateCountLabel(page.getTotalElements()); // вначале заполняется
         timeCurrent();      // вначале заполняется
+    }
+
+    private void fillPagination(Page page) {
+        if (page.getTotalPages()<=1){
+            pagination.setDisable(true);
+        }else {
+            pagination.setDisable(false);
+        }
+
+        pagination.setPageCount(page.getTotalPages());
+
+        taskObservableList = FXCollections.observableArrayList(page.getContent());
+        txtTodoList.setItems(taskObservableList);
     }
 
     /**
@@ -156,10 +181,31 @@ public class MainController extends Observable {
      */
     private void fillTable() {
         //System.out.println("=========================");
-        taskObservableList = todoListImpl.findAll();
-        System.out.println("taskObservableList.isEm   pty = " + taskObservableList.isEmpty());
-        txtTodoList.setItems(taskObservableList);
+//        taskObservableList = todoListImpl.findAll();
+//        System.out.println("taskObservableList.isEm   pty = " + taskObservableList.isEmpty());
+//        txtTodoList.setItems(taskObservableList);
        // txtTodoList.refresh(); урал пока
+
+        if (txtSearch.getText().trim().length() == 0) {
+            page = todoListImpl.findAll(0, PAGE_SIZE);
+        }else {
+            page = todoListImpl.findAll(0, PAGE_SIZE, txtSearch.getText());
+        }
+        fillPagination(page);
+        pagination.setCurrentPageIndex(0);
+        updateCountLabel(page.getTotalElements());
+    }
+
+    // для показа данных с любой страницы
+    private void fillTable(int pageNumber) {
+        if (txtSearch.getText().trim().length() == 0) {
+            page = todoListImpl.findAll(pageNumber, PAGE_SIZE);
+        }else {
+            page = todoListImpl.findAll(pageNumber, PAGE_SIZE, txtSearch.getText());
+        }
+        fillPagination(page);
+        updateCountLabel(page.getTotalElements());
+
     }
 
     private void setupClearButtonField(TextField txtSearch) {
@@ -184,7 +230,7 @@ public class MainController extends Observable {
             @Override
             public void onChanged(Change<? extends Task> change) {
                // System.out.println("taskObservableList.size()" + taskObservableList.size());
-                updateCountLabel();
+                updateCountLabel(page.getTotalElements());
                 timeCurrent();
                 //fillTable(); // пробую <---- не работает
                // txtTodoList.refresh(); //пробую
@@ -228,15 +274,23 @@ public class MainController extends Observable {
                 }
             }
         });
+
+        pagination.currentPageIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                fillTable(newValue.intValue());
+            }
+        });
     }
 
     /**
      * отображение текущего количество задач
      */
-    private void updateCountLabel() {
+    private void updateCountLabel(long count) {
        // labelCount.setText(resourceBundle.getString("Number_tasks") + ": " + todoListImpl.getTasksList().size());
 
-        labelCount.setText(resourceBundle.getString("Number_tasks") + ": " + taskObservableList.size());
+//        labelCount.setText(resourceBundle.getString("Number_tasks") + ": " + taskObservableList.size());
+        labelCount.setText(resourceBundle.getString("Number_tasks") + ": " + count);
     }
 
     /**
