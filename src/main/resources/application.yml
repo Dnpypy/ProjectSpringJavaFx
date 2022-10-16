@@ -1,0 +1,22 @@
+hibernate:
+    connection:
+        autocommit: true
+spring:
+    datasource:
+        driver-class-name: org.sqlite.JDBC
+        url: jdbc:sqlite:todolist.db
+    jpa:
+        database-platform: ru.springboot.todolist.javafx.hibernate.dialect.SQLiteDialect
+        properties:
+            hibernate:
+                current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        show-sql: true
+
+logging:
+    file: d:\tmp\logs\app.log # здесь прописываете свой путь
+
+    level:
+        ROOT: debug
+        org.springframework: INFO
+        org.hibernate: INFO
+

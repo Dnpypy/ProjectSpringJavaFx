@@ -16,6 +16,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -35,11 +38,14 @@ import java.util.ResourceBundle;
 
 /**
  * класс уже является spring bean, потомучто прописан аннотация @Component
- * печать всех spring бинов в консоль   printBeans()
+ * печать всех spring бинов в консоль  printBeans()
  */
 @SuppressWarnings("SpringJavaStaticMembersAutowiringInspection")
 @Component
+@Slf4j
 public class MainController extends Observable {
+
+//    private Logger logger = LoggerFactory.getLogger(MainController.class);
 
     /**
      * @param PAGE_SIZE количество задач на странице
@@ -145,7 +151,8 @@ public class MainController extends Observable {
     private void fillLangComboBox() {
         Lang langRU = new Lang(0, RU_CODE, resourceBundle.getString("ru"), ManagerLocale.RU_LOCALE);
         Lang langEN = new Lang(1, EN_CODE, resourceBundle.getString("en"), ManagerLocale.EN_LOCALE);
-        System.out.println("fillLangComboBox()");
+       // System.out.println("fillLangComboBox()");
+        log.info("fillLangComboBox()");
         changeLocaleBox.getItems().add(langRU);
         changeLocaleBox.getItems().add(langEN);
 
@@ -191,6 +198,7 @@ public class MainController extends Observable {
         fillPagination(page);
         pagination.setCurrentPageIndex(0);
         updateCountLabel(page.getTotalElements());
+        log.info("table loaded....");
     }
 
     // для показа данных с любой страницы
@@ -319,10 +327,12 @@ public class MainController extends Observable {
 //                editDialogController.setTaskManagement(new Task());
                 editDialogController.setTaskManagement(task);
                 showDialog();
-                System.out.println("editDialogController.isSaveClicked() = " + editDialogController.isSaveClicked());
+                //System.out.println("editDialogController.isSaveClicked() = " + editDialogController.isSaveClicked());
+                log.info("editDialogController.isSaveClicked() = " + editDialogController.isSaveClicked());
 
                 if (editDialogController.isSaveClicked()) {
-                    System.out.println("inner");
+                   // System.out.println("inner");
+                    log.info("inner");
                     serviceTaskDao.add(editDialogController.getTask());
                     research = true;
                 }
