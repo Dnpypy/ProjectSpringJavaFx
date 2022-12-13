@@ -4,6 +4,7 @@ package ru.springboot.todolist.javafx.service.impls;
 import com.google.common.collect.Lists;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import ru.springboot.todolist.javafx.service.ServiceTaskDao;
 
 @SuppressWarnings("deprecation")
 @Service
+@Slf4j
 public class ServiceTaskDaoImpl implements ServiceTaskDao {
 
 
@@ -54,7 +56,8 @@ public class ServiceTaskDaoImpl implements ServiceTaskDao {
      * findAll() возвращает Iterable<T> благодаря библиотеке com.google.guava:guava:+ ;
      */
     public ObservableList<Task> findAll() {
-        System.out.println("findAll =========================");
+       // System.out.println("findAll =========================");
+        log.info("findAll =========================");
         return FXCollections.observableArrayList(Lists.newArrayList(taskRepository.findAll()));
 
     }

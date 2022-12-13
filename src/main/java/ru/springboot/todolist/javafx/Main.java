@@ -17,6 +17,7 @@ package ru.springboot.todolist.javafx;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.springboot.todolist.javafx.fxml.MainView;
@@ -27,6 +28,7 @@ import java.util.Locale;
 
 
 @SpringBootApplication
+@Slf4j
 public class Main extends JavaFxSpringIntegrator {
 
     @Autowired
@@ -41,9 +43,11 @@ public class Main extends JavaFxSpringIntegrator {
     public void start(Stage primaryStage) throws Exception {
 
             super.start(primaryStage);
-        System.out.println("Main class -> start ");
+      //  System.out.println("Main class -> start ");
+        log.info("Main class -> start ");
             loadMainFXML(ManagerLocale.RU_LOCALE, primaryStage);
-        System.out.println("loadMainFXML(ManagerLocale.RU_LOCALE, primaryStage);");
+        //System.out.println("loadMainFXML(ManagerLocale.RU_LOCALE, primaryStage);");
+        log.info("loadMainFXML(ManagerLocale.RU_LOCALE, primaryStage);");
     }
 
     @Override
@@ -74,7 +78,8 @@ public class Main extends JavaFxSpringIntegrator {
             primaryStage.setMinWidth(750);
             primaryStage.centerOnScreen();
             primaryStage.setTitle(mainView.getResourceBundle().getString("todo_list"));
-            System.out.println("loadMainFXML");
+           // System.out.println("loadMainFXML");
+            log.info("loadMainFXML");
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +94,8 @@ public class Main extends JavaFxSpringIntegrator {
      */
     public static void main(String[] args) {
         launchSpringJavaFXApp(Main.class, args);
-        System.out.println("main    launchSpringJavaFXApp(Main.class, args);");
+      //  System.out.println("main    launchSpringJavaFXApp(Main.class, args);");
+        log.info("main    launchSpringJavaFXApp(Main.class, args);");
     }
 
     /**

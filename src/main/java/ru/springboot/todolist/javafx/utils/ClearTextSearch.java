@@ -5,7 +5,7 @@ import javafx.scene.control.TextField;
 public class ClearTextSearch {
 
     /**
-     * Получается ссылку на объект текстового поля
+     * Получает ссылку на объект текстового поля
      * Очищает текстовое поле пустым значением
      */
     public static void clearText(TextField text) {
